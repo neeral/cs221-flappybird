@@ -10,7 +10,6 @@ from collections import deque
 import pygame
 from pygame.locals import *
 
-import agent
 
 FPS = 60
 ANIMATION_SPEED = 0.18  # pixels per millisecond
@@ -192,8 +191,6 @@ class PipePair(pygame.sprite.Sprite):
         bottom_end_piece_pos = (0, bottom_pipe_end_y - PipePair.PIECE_HEIGHT)
         self.image.blit(pipe_end_img, bottom_end_piece_pos)
 
-        self.bottom_pipe_end_y = bottom_end_piece_pos[1] - PipePair.PIECE_HEIGHT
-
         # top pipe
         for i in range(self.top_pieces):
             self.image.blit(pipe_body_img, (0, i * PipePair.PIECE_HEIGHT))
@@ -329,10 +326,6 @@ def main():
 
     pipes = deque()
 
-    nextPipes = deque()
-    agent_y = None
-    agent_status = True
-
     frame_clock = 0  # this counter is only incremented if the game isn't paused
     score = 0
     done = paused = False
@@ -344,7 +337,6 @@ def main():
         if not (paused or frame_clock % msec_to_frames(PipePair.ADD_INTERVAL)):
             pp = PipePair(images['pipe-end'], images['pipe-body'])
             pipes.append(pp)
-            nextPipes.append(pp)
 
         for e in pygame.event.get():
             if e.type == QUIT or (e.type == KEYUP and e.key == K_ESCAPE):
@@ -355,22 +347,6 @@ def main():
             elif e.type == MOUSEBUTTONUP or (e.type == KEYUP and
                     e.key in (K_UP, K_RETURN, K_SPACE)):
                 bird.msec_to_climb = Bird.CLIMB_DURATION
-
-        print 'bird.y:', bird.y, 'pipe:', nextPipes[0].bottom_pipe_end_y
-
-        if agent_y != None and agent_y - bird.y > 10:
-            agent_status = True
-
-        if agent_y == None or agent_y - bird.y > 10 or agent_status:
-            print 'agent_y:', agent_y, 'bird.y:', bird.y
-            if agent.bangbang(bird.y, nextPipes[0].bottom_pipe_end_y, Bird.HEIGHT) == 1:
-                print 'bangbang = 1'
-                bird.msec_to_climb = Bird.CLIMB_DURATION
-                agent_y = bird.y
-                agent_status = False
-            # else:
-                # print 'bangbang = 0'
-
 
         if paused:
             continue  # don't draw anything
@@ -398,7 +374,6 @@ def main():
             if p.x + PipePair.WIDTH < bird.x and not p.score_counted:
                 score += 1
                 p.score_counted = True
-                nextPipes.popleft()
 
         score_surface = score_font.render(str(score), True, (255, 255, 255))
         score_x = WIN_WIDTH/2 - score_surface.get_width()/2
