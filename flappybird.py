@@ -356,15 +356,15 @@ def main():
                     e.key in (K_UP, K_RETURN, K_SPACE)):
                 bird.msec_to_climb = Bird.CLIMB_DURATION
 
-        print 'bird.y:', bird.y, 'pipe:', nextPipes[0].bottom_pipe_end_y
+        print ('bird.y:', bird.y, 'pipe:', nextPipes[0].bottom_pipe_end_y)
 
         if agent_y != None and agent_y - bird.y > 10:
             agent_status = True
 
         if agent_y == None or agent_y - bird.y > 10 or agent_status:
-            print 'agent_y:', agent_y, 'bird.y:', bird.y
+            print ('agent_y:', agent_y, 'bird.y:', bird.y)
             if agent.bangbang(bird.y, nextPipes[0].bottom_pipe_end_y, Bird.HEIGHT) == 1:
-                print 'bangbang = 1'
+                print ('bangbang = 1')
                 bird.msec_to_climb = Bird.CLIMB_DURATION
                 agent_y = bird.y
                 agent_status = False
