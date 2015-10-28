@@ -62,26 +62,26 @@ def main():
 
         ###############################  AGENT CODE ####################################################
 
-        # print ('bird.y:', bird.y, 'pipe:', nextPipes[0].bottom_pipe_end_y)
-
-
+        ########################################################################
+        #### Bangbang controller
+        ########################################################################
         # if agent_y != None and agent_y - bird.y > 10:
         #     agent_status = True
-
+        #
         # if agent_y == None or agent_y - bird.y > 10 or agent_status:
-        #     print ('agent_y:', agent_y, 'bird.y:', bird.y)
         #     if agent.bangbang(bird.y, nextPipes[0].bottom_pipe_end_y, Bird.HEIGHT) == 1:
-        #         print ('bangbang = 1')
         #         bird.msec_to_climb = Bird.CLIMB_DURATION
         #         agent_y = bird.y
         #         agent_status = False
-        #     # else:
-        #         # print 'bangbang = 0'
 
-        flappyProblem = agent.FlappySearch(agent.FlappyState(bird,pipes))
-        UCS = search.UniformCostSearch()
-        UCS.solve(flappyProblem)
-        if UCS.actions[0] == 'jump':
+
+        ########################################################################
+        #### UniformCostSearch
+        ########################################################################
+        flappyProblem = agent.FlappySearch(agent.FlappyState(bird, pipes))
+        ucs = search.UniformCostSearch()
+        ucs.solve(flappyProblem)
+        if ucs.actions[0] == 'jump':
             bird.msec_to_climb = Bird.CLIMB_DURATION
 
         ######################################################################################################

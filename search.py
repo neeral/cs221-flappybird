@@ -1,4 +1,4 @@
-# search solvers from RECONSTRUCT 
+# search solvers from RECONSTRUCT
 # includes A* and UCS
 
 import heapq, collections, re, sys, time, os, random
@@ -95,7 +95,6 @@ class PriorityQueue:
     # priority.
     # Return whether the priority queue was updated.
     def update(self, state, newPriority):
-        print((state,newPriority))
         oldPriority = self.priorities.get(state)
         if oldPriority == None or newPriority < oldPriority:
             self.priorities[state] = newPriority
