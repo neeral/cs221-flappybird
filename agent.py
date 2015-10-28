@@ -10,7 +10,7 @@ def bangbang(bird_y, pipe_y, bird_height):
 class FlappySearch:
 	def __init__(self,start):
 		self.start= start
-		self.delta_frames = 1
+		self.delta_frames = 15
 
 	# Return the start state.
 	def startState(self):
@@ -18,7 +18,7 @@ class FlappySearch:
 
 	# Return whether |state| is a goal state or not.
 	def isGoal(self, state):
-		return WIN_WIDTH == state.bird.x 
+		return WIN_WIDTH <= state.bird.x
 
 	# Return a list of (action, newState, cost) tuples corresponding to edges
 	# coming out of |state|.
