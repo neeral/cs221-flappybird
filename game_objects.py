@@ -70,8 +70,8 @@ class Bird(pygame.sprite.Sprite):
         """
         if self.msec_to_climb > 0:
             frac_climb_done = 1 - self.msec_to_climb/Bird.CLIMB_DURATION
-            self.y -= (Bird.CLIMB_SPEED * frames_to_msec(delta_frames) *
-                       (1 - math.cos(frac_climb_done * math.pi)))
+            self.y -= (Bird.CLIMB_SPEED * frames_to_msec(delta_frames) * \
+                (math.sin(frac_climb_done * math.pi/2)))
             self.msec_to_climb -= frames_to_msec(delta_frames)
         else:
             self.y += Bird.SINK_SPEED * frames_to_msec(delta_frames)

@@ -37,6 +37,7 @@ class UniformCostSearch(SearchAlgorithm):
         # If a path exists, set |actions| and |totalCost| accordingly.
         # Otherwise, leave them as None.
         self.actions = None
+        self.optStates = None
         self.totalCost = None
         self.numStatesExplored = 0
 
@@ -60,8 +61,10 @@ class UniformCostSearch(SearchAlgorithm):
             # Check if we've reached the goal; if so, extract solution
             if problem.isGoal(state):
                 self.actions = []
+                self.optStates = []
                 while state != startState:
                     action, prevState = backpointers[state]
+                    self.optStates.append(state)
                     self.actions.append(action)
                     state = prevState
                 self.actions.reverse()

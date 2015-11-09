@@ -78,11 +78,13 @@ def main():
         ########################################################################
         #### UniformCostSearch
         ########################################################################
+        
         flappyProblem = agent.FlappySearch(agent.FlappyState(bird, pipes))
         ucs = search.UniformCostSearch()
         ucs.solve(flappyProblem)
         if ucs.actions[0] == 'jump':
             bird.msec_to_climb = Bird.CLIMB_DURATION
+
 
         ######################################################################################################
 
@@ -97,6 +99,11 @@ def main():
 
         for x in (0, WIN_WIDTH / 2):
             display_surface.blit(images['background'], (x, 0))
+
+        ############################## display predicted path ###################
+        # for state in ucs.optStates:
+        #     display_surface.blit(state.bird.image,state.bird.rect)
+        ##########################################################################
 
         while pipes and not pipes[0].visible:
             pipes.popleft()
@@ -121,6 +128,7 @@ def main():
 
         pygame.display.flip()
         frame_clock += 1
+
     print('Game over! Score: %i' % score)
     pygame.quit()
 

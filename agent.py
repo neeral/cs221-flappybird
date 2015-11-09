@@ -9,7 +9,7 @@ def bangbang(bird_y, pipe_y, bird_height):
 class FlappySearch:
 	def __init__(self,start):
 		self.start = start
-		self.delta_frames = 15
+		self.delta_frames = 1
 
 	# Return the start state.
 	def startState(self):
@@ -35,6 +35,7 @@ class FlappySearch:
 					newStateList.append( (action, newState, float('Inf')) )
 				else:
 					newStateList.append( (action, newState, euclideanDistance(state,newState)) )
+
 
 			elif action == 'jump':
 				newbird = Bird(bird.x, bird.y, Bird.CLIMB_DURATION, (bird._img_wingup, bird._img_wingdown) )
@@ -75,3 +76,6 @@ class FlappyState:
 
 	def __str__(self):
 		return 'Bird({},{}) with {}ms to climb, {} pipes'.format(self.bird.x, self.bird.y, self.bird.msec_to_climb, len(self.pipes))
+
+	def __lt__(self, other):
+		return True
