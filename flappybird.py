@@ -8,6 +8,9 @@ import agent
 import search
 
 
+import time
+import timeit
+
 
 def main():
     """The application's entry point.
@@ -35,6 +38,7 @@ def main():
     nextPipes = deque()
     agent_y = None
     agent_status = True
+    time_taken = []
 
     frame_clock = 0  # this counter is only incremented if the game isn't paused
     score = 0
@@ -78,10 +82,12 @@ def main():
         ########################################################################
         #### UniformCostSearch
         ########################################################################
-        
+
         flappyProblem = agent.FlappySearch(agent.FlappyState(bird, pipes))
         ucs = search.UniformCostSearch()
+        start_time = time.time()
         ucs.solve(flappyProblem)
+        time_taken.append(time.time() - start_time)
         if ucs.actions[0] == 'jump':
             bird.msec_to_climb = Bird.CLIMB_DURATION
 
@@ -121,6 +127,7 @@ def main():
                 score += 1
                 p.score_counted = True
                 nextPipes.popleft()
+                print('Times: total=%fs from %i iterations. Average=%fs' % (sum(time_taken), len(time_taken), (sum(time_taken)/len(time_taken))))
 
         score_surface = score_font.render(str(score), True, (255, 255, 255))
         score_x = WIN_WIDTH/2 - score_surface.get_width()/2

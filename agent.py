@@ -34,8 +34,10 @@ class FlappySearch:
 				if newState.isCollide():
 					newStateList.append( (action, newState, float('Inf')) )
 				else:
+					gap_y = (state.pipes[0].top_pipe_end_y + state.pipes[0].bottom_pipe_end_y) / 2
+
 					newStateList.append( (action, newState, euclideanDistance_state(state,newState) \
-						+ euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,WIN_HEIGHT/2.)) ) )
+						+ euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) ) )
 
 
 
@@ -48,8 +50,10 @@ class FlappySearch:
 				if newState.isCollide():
 					newStateList.append( (action, newState, float('Inf')) )
 				else:
+					gap_y = (state.pipes[0].top_pipe_end_y + state.pipes[0].bottom_pipe_end_y) / 2
+
 					newStateList.append( (action, newState, euclideanDistance_state(state,newState) \
-						+ euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,WIN_HEIGHT/2.)) ) )
+						+ euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) ) )
 
 
 		return newStateList
