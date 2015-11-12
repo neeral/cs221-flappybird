@@ -101,8 +101,8 @@ def main():
             display_surface.blit(images['background'], (x, 0))
 
         ############################## display predicted path ###################
-        # for state in ucs.optStates:
-        #     display_surface.blit(state.bird.image,state.bird.rect)
+        for state in ucs.optStates:
+            display_surface.blit(state.bird.image,state.bird.rect)
         ##########################################################################
 
         while pipes and not pipes[0].visible:

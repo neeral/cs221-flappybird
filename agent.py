@@ -34,7 +34,9 @@ class FlappySearch:
 				if newState.isCollide():
 					newStateList.append( (action, newState, float('Inf')) )
 				else:
-					newStateList.append( (action, newState, euclideanDistance(state,newState)) )
+					newStateList.append( (action, newState, euclideanDistance_state(state,newState) \
+						+ euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,WIN_HEIGHT/2.)) ) )
+
 
 
 			elif action == 'jump':
@@ -46,13 +48,20 @@ class FlappySearch:
 				if newState.isCollide():
 					newStateList.append( (action, newState, float('Inf')) )
 				else:
-					newStateList.append( (action, newState, euclideanDistance(state,newState)) )
+					newStateList.append( (action, newState, euclideanDistance_state(state,newState) \
+						+ euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,WIN_HEIGHT/2.)) ) )
+
 
 		return newStateList
 
 
-def euclideanDistance(state1,state2):
+def euclideanDistance_state(state1,state2):
 	return (state1.bird.x-state2.bird.x)**2 + (state1.bird.y-state2.bird.y)**2
+
+def euclideanDistance(x1,x2):
+	return (x1[0]-x2[0])**2 + (x1[1]-x2[1])**2
+
+
 
 
 class FlappyState:
