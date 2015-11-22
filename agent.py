@@ -17,7 +17,7 @@ class FlappySearch:
 
 	# Return whether |state| is a goal state or not.
 	def isGoal(self, state):
-		return WIN_WIDTH <= state.bird.x
+		return WIN_WIDTH <= state.bird.x 
 
 	# Return a list of (action, newState, cost) tuples corresponding to edges
 	# coming out of |state|.
@@ -36,8 +36,10 @@ class FlappySearch:
 				else:
 					gap_y = (state.pipes[0].top_pipe_end_y + state.pipes[0].bottom_pipe_end_y) / 2
 
+					# newStateList.append( (action, newState, euclideanDistance_state(state,newState) ))
 					newStateList.append( (action, newState, euclideanDistance_state(state,newState) \
-						+ euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) ) )
+						- euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) \
+						 + euclideanDistance((newState.bird.x,newState.bird.y),(WIN_WIDTH,gap_y)) ) )
 
 
 
@@ -51,10 +53,11 @@ class FlappySearch:
 					newStateList.append( (action, newState, float('Inf')) )
 				else:
 					gap_y = (state.pipes[0].top_pipe_end_y + state.pipes[0].bottom_pipe_end_y) / 2
+					# newStateList.append( (action, newState, euclideanDistance_state(state,newState) ))
 
 					newStateList.append( (action, newState, euclideanDistance_state(state,newState) \
-						+ euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) ) )
-
+						- euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) +\
+						 + euclideanDistance((newState.bird.x,newState.bird.y),(WIN_WIDTH,gap_y)) ) )
 
 		return newStateList
 

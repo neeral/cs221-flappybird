@@ -39,6 +39,9 @@ def main():
     agent_y = None
     agent_status = True
     time_taken = []
+    ActionList = []
+    lastPipes = 0 
+
 
     frame_clock = 0  # this counter is only incremented if the game isn't paused
     score = 0
@@ -82,16 +85,21 @@ def main():
         ########################################################################
         #### UniformCostSearch
         ########################################################################
+        
 
-        flappyProblem = agent.FlappySearch(agent.FlappyState(bird, pipes))
-        ucs = search.UniformCostSearch()
-        start_time = time.time()
-        ucs.solve(flappyProblem)
-        time_taken.append(time.time() - start_time)
-        if ucs.actions[0] == 'jump':
+        if  len(pipes)-lastPipes >= 1 or len(ActionList) == 0:
+            flappyProblem = agent.FlappySearch(agent.FlappyState(bird, pipes))
+            ucs = search.UniformCostSearch()
+            start_time = time.time()
+            ucs.solve(flappyProblem)
+            time_taken.append(time.time() - start_time)
+            ActionList = ucs.actions
+            predState = ucs.optStates
+        currAction = ActionList.pop(0)
+        if currAction == 'jump':
             bird.msec_to_climb = Bird.CLIMB_DURATION
 
-
+        lastPipes = len(pipes)
         ######################################################################################################
 
 
@@ -107,10 +115,11 @@ def main():
             display_surface.blit(images['background'], (x, 0))
 
         ############################## display predicted path ###################
-        for state in ucs.optStates:
-            display_surface.blit(state.bird.image,state.bird.rect)
+        
+        # for state in predState:
+        #     display_surface.blit(state.bird.image,state.bird.rect)
+        # predState.pop(0)
         ##########################################################################
-
         while pipes and not pipes[0].visible:
             pipes.popleft()
 
