@@ -10,7 +10,7 @@ from collections import deque
 import pygame
 from pygame.locals import *
 
-FPS = 8
+FPS = 60
 ANIMATION_SPEED = 0.18  # pixels per millisecond
 WIN_WIDTH = 284 * 2     # BG image size: 284x512 px; tiled twice
 WIN_HEIGHT = 512
