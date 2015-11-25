@@ -21,10 +21,12 @@ class QLState:
 
 class Qvalue:
 	# ETA = 0.6
-	GAMMA = 1
+	GAMMA = 1.0
 
-	def __init__(self):
+	def __init__(self, gamma):
 		self.Q = Counter()
+		if gamma is not None:
+		    self.GAMMA = gamma
 
 	def update(self,state,action,reward,nextState,N):
 		# if reward!= -1000:
@@ -32,10 +34,8 @@ class Qvalue:
 		ETA = 1/math.sqrt(N+1)
 		self.Q[(state,action)] = (1-ETA)*self.Q[(state,action)] +\
 		 ETA*(reward + Qvalue.GAMMA*max(self.Q[(nextState,'jump')],self.Q[(nextState,'stay')]))
-		print(reward)
 
 	def policy(self, state):
-		print((state[0],state[1]))
 		if self.Q[(state,'jump')] > self.Q[(state,'stay')]:
 			return 'jump'
 		else:
