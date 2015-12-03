@@ -18,14 +18,15 @@ def main(maxGames, gamma, epsilon):
     If someone executes this module (instead of importing it, for
     example), this function is called.
     """
-    counter = 0 
-    QL = QLearning.Qvalue(gamma)    
-    reward = 1
+    counter = 0
+    QL = QLearning.Qvalue(gamma)
+    reward = 10
     reward_die = -1000
     reward_pass = 1
+    reward_ingap = 200
     scoreList = []
     avgScore = []
-    
+
     filename_prefix = './q-attempt-auto-'
     filename = filename_prefix + str(gamma) + '-' + str(epsilon) + '.txt'
     f = open(filename, 'w+')
@@ -55,7 +56,7 @@ def main(maxGames, gamma, epsilon):
         agent_status = True
         time_taken = []
         ActionList = []
-        lastPipes = 0 
+        lastPipes = 0
         fcounter = 0
 
 
@@ -85,18 +86,18 @@ def main(maxGames, gamma, epsilon):
 
             ###############################  RL CODE ####################################################
 
-            
+
             ######################################################################################################
             ####### QLearning
             ######################################################################################################
-            
+
             if (fcounter%(FPS/8) == 0):
                 newState = QLearning.QLState(bird,pipes)
 #                newAction = QLearning.epsilon_greedy(QL,min(0.6,10/math.sqrt(counter+1)),newState)
-                if counter % 10 == 0:
-                    newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
-                else:
-                    newAction = QLearning.epsilon_greedy(QL, 0, newState)
+#                if counter % 10 == 0:
+                newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
+#                else:
+#                    newAction = QLearning.epsilon_greedy(QL, 0, newState)
                 if newAction == 'jump':
                     bird.msec_to_climb = Bird.CLIMB_DURATION
                 episode.append((newState.short(),newAction))
@@ -114,7 +115,7 @@ def main(maxGames, gamma, epsilon):
                 display_surface.blit(images['background'], (x, 0))
 
             ############################## display predicted path ###################
-            
+
             # for state in predState:
             #     display_surface.blit(state.bird.image,state.bird.rect)
             # predState.pop(0)
@@ -145,34 +146,34 @@ def main(maxGames, gamma, epsilon):
 
         for i in range(len(episode)-2):
             if episode[i+1][0][1] >= 0 and episode[i+1][0][1] <= 3:
-                QL.update(episode[i][0],episode[i][1],reward_pass,episode[i+1][0],counter)
+                QL.update(episode[i][0],episode[i][1],reward_ingap,episode[i+1][0],counter)
             else:
                 QL.update(episode[i][0],episode[i][1],reward,episode[i+1][0],counter)
-        QL.update(episode[len(episode)-2][0],episode[len(episode)-2][1],reward_die,episode[len(episode)-1][0],counter)
-        print('Game over! Score: %i' % score)
-#        print(QL.Q)
+        # diff = abs(episode[len(episode)-1][0][1])
+        QL.update(episode[len(episode)-2][0], episode[len(episode)-2][1], reward_die, episode[len(episode)-1][0], counter)
+        print('Game over! Score: %i\tnum states:%i\tnum games:%i' % (score, len(QL.Q), counter))
         counter+=1
-        if counter % 10 == 0:
-            print(counter, len(QL.Q))
-            if len(avgScore) == 0:
-                avgScore.append(score)
-            else:
-                avgScore.append((avgScore[-1]*(counter-1)+ score)/float(counter))
-            scoreList.append(score)
+#        if counter % 10 == 0:
+        if len(avgScore) == 0:
+            avgScore.append(score)
+        else:
+            avgScore.append((avgScore[-1]*(counter-1)+ score)/float(counter))
+        scoreList.append(score)
 
 
     pygame.quit()
     print(scoreList)
     print(avgScore)
     f.write(str(avgScore))
+    f.write('\n')
     f.write(str(scoreList))
 
 
 if __name__ == '__main__':
     # If this module had been imported, __name__ would be 'flappybird'.
     # It was executed (e.g. by double-clicking the file), so call main.
-#    main()
 
-    maxGames = 10
-    for gamma in range(11):
-        main(maxGames, 0.1*gamma, 0.1)
+    maxGames = 10000
+    for epsilon in [0.7, 0.8, 0.9, 1.0]:
+        for gamma in range(11):
+            main(maxGames, 0.1*gamma, epsilon)
