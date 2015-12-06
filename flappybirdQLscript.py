@@ -12,7 +12,7 @@ from collections import Counter
 import time
 import timeit
 
-def main(maxGames, gamma, epsilon):
+def main(maxGames, gamma, epsilon, bird_has_learned, q_values_counter):
     """The application's entry point.
 
     If someone executes this module (instead of importing it, for
@@ -20,6 +20,9 @@ def main(maxGames, gamma, epsilon):
     """
     counter = 0
     QL = QLearning.Qvalue(gamma)
+
+    if bird_has_learned==1 :
+        QL.Q = q_values_counter
 
     reward = 10
     reward_die = -1000
@@ -96,7 +99,11 @@ def main(maxGames, gamma, epsilon):
                 newState = QLearning.QLState(bird,pipes)
 #                newAction = QLearning.epsilon_greedy(QL,min(0.6,10/math.sqrt(counter+1)),newState)
                 epsilon = min(0.1, float(70)/float(counter+1))
-                newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
+                if bird_has_learned==1:
+                    epsilon = 0.0
+                    newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
+                else:
+                    newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
                 # if counter % 1 == 0:
                 #     newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
                 # else:
@@ -147,13 +154,14 @@ def main(maxGames, gamma, epsilon):
             pygame.display.flip()
             frame_clock += 1
 
-        for i in range(len(episode)-2):
-            if episode[i+1][0][1] >= 0 and episode[i+1][0][1] <= 3:
-                QL.update(episode[i][0],episode[i][1],reward_ingap,episode[i+1][0],counter)
-            else:
-                QL.update(episode[i][0],episode[i][1],reward,episode[i+1][0],counter)
+        if bird_has_learned != 1:            
+            for i in range(len(episode)-2):
+                if episode[i+1][0][1] >= 0 and episode[i+1][0][1] <= 3:
+                    QL.update(episode[i][0],episode[i][1],reward_ingap,episode[i+1][0],counter)
+                else:
+                    QL.update(episode[i][0],episode[i][1],reward,episode[i+1][0],counter)
 
-        QL.update(episode[len(episode)-2][0],episode[len(episode)-2][1],reward_die,episode[len(episode)-1][0],counter)
+            QL.update(episode[len(episode)-2][0],episode[len(episode)-2][1],reward_die,episode[len(episode)-1][0],counter)
         print('Game over! Score: %i\tnum states:%i\tnum games:%i' % (score, len(QL.Q), counter))#        print(QL.Q)
         counter+=1
         # if counter % 10 == 0:
@@ -179,5 +187,8 @@ if __name__ == '__main__':
     # It was executed (e.g. by double-clicking the file), so call main.
 
     maxGames = 2000
-    gamma = 0.8
-    main(maxGames, gamma, None)
+    gamma = 0.91
+    qfile = open('q_values_learned.txt')
+    q_values = eval(qfile.read())
+    print len(q_values)
+    main(maxGames, gamma, None,1, q_values)
