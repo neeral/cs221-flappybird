@@ -4,11 +4,11 @@ from collections import Counter
 import random
 
 class QLState:
-	NUM_TILES_X = 10
-	NUM_TILES_Y = 10
+	NUM_TILES_X = 40
+	NUM_TILES_Y = 40
 	def __init__(self, bird, pipes):
-		self.x = int(pipes[0].x*QLState.NUM_TILES_X/WIN_WIDTH-bird.x*QLState.NUM_TILES_X/WIN_WIDTH)
-		self.y = int(pipes[0].bottom_pipe_end_y*QLState.NUM_TILES_Y/WIN_HEIGHT - bird.y*QLState.NUM_TILES_Y/WIN_HEIGHT)
+		self.x = int(pipes[0].x*float(QLState.NUM_TILES_X)/float(WIN_WIDTH)-bird.x*float(QLState.NUM_TILES_X)/float(WIN_WIDTH))
+		self.y = int(pipes[0].bottom_pipe_end_y*float(QLState.NUM_TILES_Y)/float(WIN_HEIGHT) - bird.y*float(QLState.NUM_TILES_Y)/float(WIN_HEIGHT))
 
 	def short(self):
 		return (self.x,self.y)

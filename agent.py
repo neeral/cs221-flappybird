@@ -38,8 +38,8 @@ class FlappySearch:
 
 					# newStateList.append( (action, newState, euclideanDistance_state(state,newState) ))
 					newStateList.append( (action, newState, euclideanDistance_state(state,newState) \
-						- euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) \
-						 + euclideanDistance((newState.bird.x,newState.bird.y),(WIN_WIDTH,gap_y)) ) )
+						- ingoal(state.bird.x)*euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) \
+						 + ingoal(newState.bird.x)*euclideanDistance((newState.bird.x,newState.bird.y),(WIN_WIDTH,gap_y)) ) )
 
 
 
@@ -56,10 +56,17 @@ class FlappySearch:
 					# newStateList.append( (action, newState, euclideanDistance_state(state,newState) ))
 
 					newStateList.append( (action, newState, euclideanDistance_state(state,newState) \
-						- euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) +\
-						 + euclideanDistance((newState.bird.x,newState.bird.y),(WIN_WIDTH,gap_y)) ) )
+						- ingoal(state.bird.x)*euclideanDistance((state.bird.x,state.bird.y),(WIN_WIDTH,gap_y)) +\
+						 + ingoal(newState.bird.x)*euclideanDistance((newState.bird.x,newState.bird.y),(WIN_WIDTH,gap_y)) ) )
 
 		return newStateList
+
+
+def ingoal(state_x):
+	if state_x >= WIN_WIDTH:
+		return 0
+	else:
+		return 1
 
 
 def euclideanDistance_state(state1,state2):

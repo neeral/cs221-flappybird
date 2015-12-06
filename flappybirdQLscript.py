@@ -20,9 +20,10 @@ def main(maxGames, gamma, epsilon):
     """
     counter = 0 
     QL = QLearning.Qvalue(gamma)    
-    reward = 1
+    reward = 10
     reward_die = -1000
     reward_pass = 1
+    reward_ingap = 200
     scoreList = []
     avgScore = []
     
@@ -90,13 +91,15 @@ def main(maxGames, gamma, epsilon):
             ####### QLearning
             ######################################################################################################
             
-            if (fcounter%(FPS/8) == 0):
+            if (fcounter%(FPS/4) == 0):
                 newState = QLearning.QLState(bird,pipes)
 #                newAction = QLearning.epsilon_greedy(QL,min(0.6,10/math.sqrt(counter+1)),newState)
-                if counter % 10 == 0:
-                    newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
-                else:
-                    newAction = QLearning.epsilon_greedy(QL, 0, newState)
+                epsilon = min(0.1, float(70)/float(counter+1))
+                newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
+                # if counter % 1 == 0:
+                #     newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
+                # else:
+                #     newAction = QLearning.epsilon_greedy(QL, 0, newState)
                 if newAction == 'jump':
                     bird.msec_to_climb = Bird.CLIMB_DURATION
                 episode.append((newState.short(),newAction))
@@ -145,34 +148,34 @@ def main(maxGames, gamma, epsilon):
 
         for i in range(len(episode)-2):
             if episode[i+1][0][1] >= 0 and episode[i+1][0][1] <= 3:
-                QL.update(episode[i][0],episode[i][1],reward_pass,episode[i+1][0],counter)
+                QL.update(episode[i][0],episode[i][1],reward_ingap,episode[i+1][0],counter)
             else:
                 QL.update(episode[i][0],episode[i][1],reward,episode[i+1][0],counter)
         QL.update(episode[len(episode)-2][0],episode[len(episode)-2][1],reward_die,episode[len(episode)-1][0],counter)
-        print('Game over! Score: %i' % score)
-#        print(QL.Q)
+        print('Game over! Score: %i\tnum states:%i\tnum games:%i' % (score, len(QL.Q), counter))#        print(QL.Q)
         counter+=1
-        if counter % 10 == 0:
-            print(counter, len(QL.Q))
-            if len(avgScore) == 0:
-                avgScore.append(score)
-            else:
-                avgScore.append((avgScore[-1]*(counter-1)+ score)/float(counter))
-            scoreList.append(score)
-
+        # if counter % 10 == 0:
+        if len(avgScore) == 0:
+            avgScore.append(score)
+        else:
+            avgScore.append((avgScore[-1]*(counter-1)+ score)/float(counter))
+        scoreList.append(score)
 
     pygame.quit()
     print(scoreList)
     print(avgScore)
     f.write(str(avgScore))
+    f.write('\n')
     f.write(str(scoreList))
-
+    f.write('\n')
+    f.write(str(QL.Q))
+    f.write('\n')
 
 if __name__ == '__main__':
     # If this module had been imported, __name__ would be 'flappybird'.
     # It was executed (e.g. by double-clicking the file), so call main.
 #    main()
 
-    maxGames = 10
-    for gamma in range(11):
-        main(maxGames, 0.1*gamma, 0.1)
+    maxGames = 2000
+    gamma = 0.8
+    main(maxGames, gamma, None)
