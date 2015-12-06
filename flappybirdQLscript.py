@@ -18,15 +18,16 @@ def main(maxGames, gamma, epsilon):
     If someone executes this module (instead of importing it, for
     example), this function is called.
     """
-    counter = 0 
-    QL = QLearning.Qvalue(gamma)    
+    counter = 0
+    QL = QLearning.Qvalue(gamma)
+
     reward = 10
     reward_die = -1000
     reward_pass = 1
     reward_ingap = 200
     scoreList = []
     avgScore = []
-    
+
     filename_prefix = './q-attempt-auto-'
     filename = filename_prefix + str(gamma) + '-' + str(epsilon) + '.txt'
     f = open(filename, 'w+')
@@ -56,7 +57,7 @@ def main(maxGames, gamma, epsilon):
         agent_status = True
         time_taken = []
         ActionList = []
-        lastPipes = 0 
+        lastPipes = 0
         fcounter = 0
 
 
@@ -86,7 +87,7 @@ def main(maxGames, gamma, epsilon):
 
             ###############################  RL CODE ####################################################
 
-            
+
             ######################################################################################################
             ####### QLearning
             ######################################################################################################
@@ -117,7 +118,7 @@ def main(maxGames, gamma, epsilon):
                 display_surface.blit(images['background'], (x, 0))
 
             ############################## display predicted path ###################
-            
+
             # for state in predState:
             #     display_surface.blit(state.bird.image,state.bird.rect)
             # predState.pop(0)
@@ -151,6 +152,7 @@ def main(maxGames, gamma, epsilon):
                 QL.update(episode[i][0],episode[i][1],reward_ingap,episode[i+1][0],counter)
             else:
                 QL.update(episode[i][0],episode[i][1],reward,episode[i+1][0],counter)
+
         QL.update(episode[len(episode)-2][0],episode[len(episode)-2][1],reward_die,episode[len(episode)-1][0],counter)
         print('Game over! Score: %i\tnum states:%i\tnum games:%i' % (score, len(QL.Q), counter))#        print(QL.Q)
         counter+=1
@@ -160,6 +162,7 @@ def main(maxGames, gamma, epsilon):
         else:
             avgScore.append((avgScore[-1]*(counter-1)+ score)/float(counter))
         scoreList.append(score)
+
 
     pygame.quit()
     print(scoreList)
@@ -174,7 +177,6 @@ def main(maxGames, gamma, epsilon):
 if __name__ == '__main__':
     # If this module had been imported, __name__ would be 'flappybird'.
     # It was executed (e.g. by double-clicking the file), so call main.
-#    main()
 
     maxGames = 2000
     gamma = 0.8
