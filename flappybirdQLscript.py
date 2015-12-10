@@ -94,20 +94,12 @@ def main(maxGames, gamma, epsilon, bird_has_learned, q_values_counter):
             ######################################################################################################
             ####### QLearning
             ######################################################################################################
-            
             if (fcounter%(FPS/4) == 0):
                 newState = QLearning.QLState(bird,pipes)
-#                newAction = QLearning.epsilon_greedy(QL,min(0.6,10/math.sqrt(counter+1)),newState)
-                epsilon = min(0.1, float(70)/float(counter+1))
                 if bird_has_learned==1:
-                    epsilon = 0.0
-                    newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
+                    newAction = QLearning.epsilon_greedy(QL, 0.0, newState)
                 else:
-                    newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
-                # if counter % 1 == 0:
-                #     newAction = QLearning.epsilon_greedy(QL, epsilon, newState)
-                # else:
-                #     newAction = QLearning.epsilon_greedy(QL, 0, newState)
+                    newAction = QLearning.epsilon_greedy(QL, min(0.1, epsilon/float(counter+1)), newState)
                 if newAction == 'jump':
                     bird.msec_to_climb = Bird.CLIMB_DURATION
                 episode.append((newState.short(),newAction))
@@ -164,7 +156,6 @@ def main(maxGames, gamma, epsilon, bird_has_learned, q_values_counter):
             QL.update(episode[len(episode)-2][0],episode[len(episode)-2][1],reward_die,episode[len(episode)-1][0],counter)
         print('Game over! Score: %i\tnum states:%i\tnum games:%i' % (score, len(QL.Q), counter))#        print(QL.Q)
         counter+=1
-        # if counter % 10 == 0:
         if len(avgScore) == 0:
             avgScore.append(score)
         else:
@@ -187,8 +178,11 @@ if __name__ == '__main__':
     # It was executed (e.g. by double-clicking the file), so call main.
 
     maxGames = 2000
-    gamma = 0.91
-    qfile = open('q_values_learned.txt')
-    q_values = eval(qfile.read())
-    print len(q_values)
-    main(maxGames, gamma, None,1, q_values)
+    gamma = 0.6
+    epsilon = 0.8
+
+    print 'now running for training: main(maxGames=%d, gamma=%f, epsilon=%f, learning=0, None)' % (maxGames, gamma, epsilon)
+    Qvalues = main(maxGames, gamma, epsilon, 0, None)
+    print 'now running for test: main(maxGames=%d, gamma=%f, epsilon=%f, learning=1, Qvalues)' % (maxGames, gamma, epsilon)
+    main(maxGames, gamma, epsilon, 1, Qvalues)
+
