@@ -186,12 +186,12 @@ if __name__ == '__main__':
     # If this module had been imported, __name__ would be 'flappybird'.
     # It was executed (e.g. by double-clicking the file), so call main.
 
-    maxGames = 2#000
+    maxGames = 2000
     gamma = 0.6
     epsilon = float(sys.argv[1])
 
     print 'now running for training: main(maxGames=%d, gamma=%f, epsilon=fn(%f), learning=0, None)' % (maxGames, gamma, epsilon)
     Qvalues = main(maxGames, gamma, epsilon, 0, None)
-    maxGames = 2#500
+    maxGames = 500
     print 'now running for test: main(maxGames=%d, gamma=%f, epsilon=fn(%f), learning=1, Qvalues)' % (maxGames, gamma, epsilon)
     main(maxGames, gamma, epsilon, 1, Qvalues)
